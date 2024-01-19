@@ -17,10 +17,10 @@ namespace API_carrds.DataControllers
                 try
                 {
                     cnn.Open();
-                    string query = "INSERT INTO " + TABLE + " (`nick`, `password`, `name`, `last_name`, `email`) VALUES (@nick,@password,@name,@last_name,@email)";
+                    string query = "INSERT INTO " + TABLE + " (`username`, `password`, `name`, `last_name`, `email`) VALUES (@username,@password,@name,@last_name,@email)";
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
-                        cmd.Parameters.Add("@nick", MySqlDbType.VarChar).Value = u.nick;
+                        cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = u.username;
                         cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = u.password;
                         cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = u.name;
                         cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = u.last_name;
@@ -62,7 +62,7 @@ namespace API_carrds.DataControllers
             using (Connection cnn = new Connection())
             {
                 cnn.Open();
-                string query = "SELECT `id`, `nick`, `password`, `name`, `last_name`, `email` FROM " + TABLE;
+                string query = "SELECT `id`, `username`, `password`, `name`, `last_name`, `email` FROM " + TABLE;
 
                 using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                 {
@@ -73,7 +73,7 @@ namespace API_carrds.DataControllers
                             User user = new User
                             {
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
-                                nick = reader.GetString(reader.GetOrdinal("nick")),
+                                username = reader.GetString(reader.GetOrdinal("username")),
                                 password = reader.GetString(reader.GetOrdinal("password")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 last_name = reader.GetString(reader.GetOrdinal("last_name")),
