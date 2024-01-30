@@ -14,8 +14,16 @@ namespace API_carrds.Controllers
         [Route("list")]
         public IEnumerable<User> ListUsers() 
         {
-            return users.ListUsers();
+            return users.GetAll();
         }
+
+        [HttpGet]
+        [Route("user")]
+        public User GetUser(int id)
+        {
+            return users.GetByID(id);  
+        }
+
         [HttpPost]
         [Route("add")]
         public string CreateUser(User u)
