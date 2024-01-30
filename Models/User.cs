@@ -29,16 +29,21 @@
         /// Direccion de correo electronico del Usuario
         /// </summary>
         public string email { get; set; }
+        /// <summary>
+        /// Direccion URL de avatar del Usuario
+        /// </summary>
+        public string avatar_url { get; set; }
 
-        public User(string username, string password, string name, string last_name, string email)
+        public User(string username, string password, string name, string last_name, string email, string avatar_url)
         {
             this.username = username;
             this.password = password;
             this.name = name;
             this.last_name = last_name;
             this.email = email;
+            this.avatar_url = avatar_url;
         }
-        public User(int id, string username, string password, string name, string last_name, string email)
+        public User(int id, string username, string password, string name, string last_name, string email,)
         {
             this.id = id;
             this.username = username;
@@ -46,6 +51,7 @@
             this.name = name;
             this.last_name = last_name;
             this.email = email;
+            this.avatar_url = avatar_url;
         }
         public User(int id) { this.id = id; }
         public User() { }
