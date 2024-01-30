@@ -19,9 +19,9 @@ namespace API_carrds.Controllers
 
         [HttpGet]
         [Route("list")]
-        public IEnumerable<Proyect> ListProyects() 
+        public IEnumerable<Proyect> ListProyect() 
         {
-            return proyects.ListUsers();
+            return proyects.GetAll();
         }
         [HttpPut]
         [Route("update")]
