@@ -14,7 +14,7 @@ namespace API_carrds.Controllers
         [Route("list")]
         public IEnumerable<User> ListUsers() 
         {
-            return users.ListUsers();
+            return users.GetAll();
         }
         [HttpPost]
         [Route("add")]

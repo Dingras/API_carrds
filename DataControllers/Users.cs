@@ -51,12 +51,8 @@ namespace API_carrds.DataControllers
             return "";
         }
 
-        public User ListUser(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IEnumerable<User> ListUsers()
+        public IEnumerable<User> GetAll()
         {
             List<User> users = new List<User>();
             using (Connection cnn = new Connection())
@@ -87,9 +83,15 @@ namespace API_carrds.DataControllers
             return users;
         }
 
+        public User GetByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Update(int id, User u)
         {
             return "";
         }
+
     }
 }

@@ -47,6 +47,7 @@
             this.last_name = last_name;
             this.email = email;
         }
+        public User(int id) { this.id = id; }
         public User() { }
     }
 }
