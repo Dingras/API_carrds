@@ -18,7 +18,7 @@ namespace API_carrds.DataControllers
                 try
                 {
                     cnn.Open();
-                    string query = "INSET INTO" + TABLE + "(`name`, `description`,`created_by`,`created_at`) VALUES (@name,@description,@created_by,@created_at)";
+                    string query = "INSERT INTO " + TABLE + "(`name`, `description`,`created_by`,`created_at`) VALUES (@name,@description,@created_by,@created_at)";
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
                         cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = p.name;
@@ -78,12 +78,12 @@ namespace API_carrds.DataControllers
 
         }
 
-        public Proyect ListUser(int id)
+        public Proyect GetByID (int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Proyect> ListUsers()
+        public IEnumerable<Proyect> GetAll()
         {
             List<Proyect> proyects = new List<Proyect>();
             using (Connection cnn = new Connection())

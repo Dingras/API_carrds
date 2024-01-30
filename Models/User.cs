@@ -43,7 +43,7 @@
             this.email = email;
             this.avatar_url = avatar_url;
         }
-        public User(int id, string username, string password, string name, string last_name, string email,)
+        public User(int id, string username, string password, string name, string last_name, string email)
         {
             this.id = id;
             this.username = username;

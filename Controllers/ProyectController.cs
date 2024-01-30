@@ -21,7 +21,7 @@ namespace API_carrds.Controllers
         [Route("list")]
         public IEnumerable<Proyect> ListProyects() 
         {
-            return proyects.ListUsers();
+            return proyects.GetAll();
         }
         [HttpPut]
         [Route("update")]
