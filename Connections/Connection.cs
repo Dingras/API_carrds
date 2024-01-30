@@ -9,7 +9,7 @@ namespace API_carrds.Connections
         {
             MySqlConnectionStringBuilder stringSQL = new MySqlConnectionStringBuilder();
             stringSQL.Server = "localhost";
-            stringSQL.Database = "db_carrds";
+            stringSQL.Database = "db_carrd";
             stringSQL.UserID = "root";
             stringSQL.Password = "";
             connectionSQL = new MySqlConnection(stringSQL.ConnectionString);
