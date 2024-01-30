@@ -99,7 +99,7 @@ namespace API_carrds.DataControllers
                         {
                             Proyect proyect = new Proyect
                             {
-                                //id = reader.GetInt32(reader.GetOrdinal("id")),
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 description = reader.GetString(reader.GetOrdinal("description")),
                                 created_by = (User)reader.GetValue(reader.GetOrdinal("created_by")),
@@ -117,7 +117,37 @@ namespace API_carrds.DataControllers
 
         public string Update(int id, Proyect t)
         {
-            throw new NotImplementedException();
+            using (Connection cnn = new Connection())
+            {
+                string message = "Connection ERROR";
+                try
+                {
+                    cnn.Open();
+                    string query = "UPDATE " + TABLE + " SET name = @name, description = @description, created_at = @created_at WHERE id=@id";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = t.name;
+                        cmd.Parameters.Add("@description", MySqlDbType.VarChar).Value = t.description;
+                        cmd.Parameters.Add("created_at", MySqlDbType.DateTime).Value = t.created_at;
+
+                        cmd.ExecuteNonQuery();
+                    }
+                    cnn.Close();
+                    message = "OK";
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+                
+                return message;
+            }
         }
     }
 }

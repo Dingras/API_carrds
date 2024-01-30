@@ -23,6 +23,12 @@ namespace API_carrds.Controllers
         {
             return proyects.ListUsers();
         }
+        [HttpPut]
+        [Route("update")]
+        public string UpdateProyect(int id, Proyect p)
+        {
+            return proyects.Update(id,p);
+        }
         
         [HttpDelete]
         [Route("delete")]
