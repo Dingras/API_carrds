@@ -17,7 +17,7 @@ namespace API_carrds.DataControllers
                 try
                 {
                     cnn.Open();
-                    string query = "INSERT INTO " + TABLE + " (`username`, `password`, `name`, `last_name`, `email`) VALUES (@username,@password,@name,@last_name,@email)";
+                    string query = "INSERT INTO " + TABLE + " (`username`, `password`, `name`, `last_name`, `email`,`avatar_url`) VALUES (@username,@password,@name,@last_name,@email,@avatar_url)";
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
                         cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = u.username;
@@ -25,6 +25,7 @@ namespace API_carrds.DataControllers
                         cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = u.name;
                         cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = u.last_name;
                         cmd.Parameters.Add("@email", MySqlDbType.VarChar).Value = u.email;
+                        cmd.Parameters.Add("@avatar_url", MySqlDbType.VarChar).Value = u.avatar_url;
                         cmd.ExecuteNonQuery();
 
                     }
@@ -51,12 +52,38 @@ namespace API_carrds.DataControllers
             return "";
         }
 
-        public User ListUser(int id)
+        public User GetByID(int id)
         {
-            throw new NotImplementedException();
+            using (Connection cnn = new Connection())
+            {
+                cnn.Open();
+                string query = "SELECT * FROM `users` WHERE `id`=@id";
+                User user = null;
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                {
+                    cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new User
+                            {
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
+                                username = reader.GetString(reader.GetOrdinal("username")),
+                                password = reader.GetString(reader.GetOrdinal("password")),
+                                name = reader.GetString(reader.GetOrdinal("name")),
+                                last_name = reader.GetString(reader.GetOrdinal("last_name")),
+                                email = reader.GetString(reader.GetOrdinal("email"))
+                            };
+                        }
+                    }
+                }
+                return user;
+            }
+            
         }
 
-        public IEnumerable<User> ListUsers()
+        public IEnumerable<User> GetAll()
         {
             List<User> users = new List<User>();
             using (Connection cnn = new Connection())

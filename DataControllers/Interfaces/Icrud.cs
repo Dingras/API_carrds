@@ -7,8 +7,8 @@ namespace API_carrds.DataControllers.Interfaces
         // Create
         public string Create(T t);
         //Read
-        public IEnumerable<T> ListUsers();
-        public T ListUser(int id);
+        public IEnumerable<T> GetAll();
+        public T GetByID(int id);
         // Update
         public string Update(int id,T t);
         //Delete
