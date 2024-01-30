@@ -30,5 +30,19 @@ namespace API_carrds.Controllers
         {
             return users.Create(u); 
         }
+
+        [HttpDelete]
+        [Route("delete")]
+        public string DeleteUser(int id)
+        {
+            return users.Delete(id);
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public string UpdateUser(int id, User u)
+        {
+            return users.Update(id,u);
+        }
     }
 }

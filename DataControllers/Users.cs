@@ -49,7 +49,33 @@ namespace API_carrds.DataControllers
 
         public string Delete(int id)
         {
-            return "";
+            using (Connection cnn = new Connection())
+            {
+                string message = "Connection ERROR";
+                try
+                {
+                    cnn.Open();
+                    string query = "DELETE FROM "+ TABLE +" WHERE `users`.`id` = @id";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cnn.Close();
+                    message = "OK";
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+
+                return message;
+            }
         }
 
         public User GetByID(int id)
@@ -57,7 +83,7 @@ namespace API_carrds.DataControllers
             using (Connection cnn = new Connection())
             {
                 cnn.Open();
-                string query = "SELECT * FROM `users` WHERE `id`=@id";
+                string query = "SELECT * FROM "+ TABLE +" WHERE `id`=@id";
                 User user = null;
                 using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                 {
@@ -116,7 +142,39 @@ namespace API_carrds.DataControllers
 
         public string Update(int id, User u)
         {
-            return "";
+            using (Connection cnn = new Connection())
+            {
+                string message = "Connection ERROR";
+                try
+                {
+                    cnn.Open();
+                    string query = "UPDATE "+ TABLE +" SET `username`=@username,`password`=@password,`name`=@name,`last_name`=@last_name,`email`=@email,`avatar_url`=@avatar_url WHERE `id`=@id";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@username", MySqlDbType.Int32).Value = id;
+                        cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = u.username;
+                        cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = u.password;
+                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = u.name;
+                        cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = u.last_name;
+                        cmd.Parameters.Add("@email", MySqlDbType.VarChar).Value = u.email;
+                        cmd.Parameters.Add("@avatar_url", MySqlDbType.VarChar).Value = u.avatar_url;
+                        cmd.ExecuteNonQuery();
+
+                    }
+                    cnn.Close();
+                    message = "OK";
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+                return message;
+            }
         }
 
     }
