@@ -78,12 +78,12 @@ namespace API_carrds.DataControllers
 
         }
 
-        public Proyect ListUser(int id)
+        public Proyect GetByID(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Proyect> ListUsers()
+        public IEnumerable<Proyect> GetAll()
         {
             List<Proyect> proyects = new List<Proyect>();
             using (Connection cnn = new Connection())
@@ -115,10 +115,6 @@ namespace API_carrds.DataControllers
             return proyects;
         }
 
-        public Proyect GetByID(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public string Update(int id, Proyect t)
         {
