@@ -78,12 +78,12 @@ namespace API_carrds.DataControllers
 
         }
 
-        public Proyect GetByID (int id)
+        public Proyect ListUser(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Proyect> GetAll()
+        public IEnumerable<Proyect> ListUsers()
         {
             List<Proyect> proyects = new List<Proyect>();
             using (Connection cnn = new Connection())
@@ -102,7 +102,7 @@ namespace API_carrds.DataControllers
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 description = reader.GetString(reader.GetOrdinal("description")),
-                                created_by = (User)reader.GetValue(reader.GetOrdinal("created_by")),
+                                created_by = new User(reader.GetInt32(reader.GetOrdinal("created_by"))),
                                 created_at = reader.GetDateTime(reader.GetOrdinal("created_at"))
                             };
 
@@ -113,6 +113,11 @@ namespace API_carrds.DataControllers
             }
 
             return proyects;
+        }
+
+        public Proyect GetByID(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public string Update(int id, Proyect t)

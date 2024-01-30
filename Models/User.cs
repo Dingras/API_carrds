@@ -53,6 +53,7 @@
             this.email = email;
             this.avatar_url = avatar_url;
         }
+        public User(int id) { this.id = id; }
         public User() { }
     }
 }
