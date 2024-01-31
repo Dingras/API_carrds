@@ -2,7 +2,6 @@
 using API_carrds.DataControllers.Interfaces;
 using API_carrds.Models;
 using MySql.Data.MySqlClient;
-using System.Dynamic;
 
 namespace API_carrds.DataControllers
 {
@@ -114,7 +113,6 @@ namespace API_carrds.DataControllers
 
             return proyects;
         }
-
 
         public string Update(int id, Proyect t)
         {
