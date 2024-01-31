@@ -1,8 +1,10 @@
 ﻿using API_carrds.Connections;
 using API_carrds.DataControllers.Interfaces;
 using API_carrds.Models;
+using Microsoft.AspNetCore.Http.Extensions;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Text;
 
 namespace API_carrds.DataControllers
 {
@@ -148,16 +150,48 @@ namespace API_carrds.DataControllers
                 try
                 {
                     cnn.Open();
-                    string query = "UPDATE "+ TABLE +" SET `username`=@username,`password`=@password,`name`=@name,`last_name`=@last_name,`email`=@email,`avatar_url`=@avatar_url WHERE `id`=@id";
-                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    
+                    StringBuilder query = new StringBuilder("UPDATE " + TABLE +" SET ");
+                    List<MySqlParameter> parameters = new List<MySqlParameter>();
+                    
+                    if (!string.IsNullOrEmpty(u.username))
                     {
-                        cmd.Parameters.Add("@username", MySqlDbType.Int32).Value = id;
-                        cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = u.username;
-                        cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = u.password;
-                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = u.name;
-                        cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = u.last_name;
-                        cmd.Parameters.Add("@email", MySqlDbType.VarChar).Value = u.email;
-                        cmd.Parameters.Add("@avatar_url", MySqlDbType.VarChar).Value = u.avatar_url;
+                        query.Append("`username` = @username, ");
+                        parameters.Add(new MySqlParameter("@username", MySqlDbType.VarChar) { Value = u.username });
+                    }
+                    if (!string.IsNullOrEmpty(u.password))
+                    {
+                        query.Append("`password` = @password, ");
+                        parameters.Add(new MySqlParameter("@password", MySqlDbType.VarChar) { Value = u.password });
+                    }
+                    if (!string.IsNullOrEmpty(u.name))
+                    {
+                        query.Append("`name` = @name, ");
+                        parameters.Add(new MySqlParameter("@name", MySqlDbType.VarChar) { Value = u.name });
+                    }
+                    if (!string.IsNullOrEmpty(u.last_name))
+                    {
+                        query.Append("`last_name` = @last_name, ");
+                        parameters.Add(new MySqlParameter("@last_name", MySqlDbType.VarChar) { Value = u.last_name });
+                    }
+                    if (!string.IsNullOrEmpty(u.email))
+                    {
+                        query.Append("`email` = @email, ");
+                        parameters.Add(new MySqlParameter("@email", MySqlDbType.VarChar) { Value = u.email });
+                    }
+                    if (!string.IsNullOrEmpty(u.avatar_url))
+                    {
+                        query.Append("`avatar_url` = @avatar_url, ");
+                        parameters.Add(new MySqlParameter("@avatar_url", MySqlDbType.VarChar) { Value = u.avatar_url });
+                    }
+                    query.Remove(query.Length - 2, 2); // Borra el espacio y la coma del final de la consulta
+                    
+                    query.Append(" WHERE `id` = @id"); // Agrego la condicion al final de la consulta
+                    parameters.Add(new MySqlParameter("@id", MySqlDbType.Int32) { Value = id });
+                    
+                    using (MySqlCommand cmd = new MySqlCommand(query.ToString(), cnn.Connect()))
+                    {
+                        cmd.Parameters.AddRange(parameters.ToArray());
                         cmd.ExecuteNonQuery();
 
                     }

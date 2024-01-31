@@ -114,7 +114,6 @@ namespace API_carrds.DataControllers
             return proyects;
         }
 
-
         public string Update(int id, Proyect t)
         {
             using (Connection cnn = new Connection())
