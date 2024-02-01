@@ -16,5 +16,7 @@
             this.title = title;
             this.description = description;
         }
+
+        public Spring(int id) { this.id = id; }
     }
 }
