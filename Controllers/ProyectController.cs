@@ -23,6 +23,12 @@ namespace API_carrds.Controllers
         {
             return proyects.GetAll();
         }
+        [HttpGet]
+        [Route("listProyect")]
+        public Proyect GetProyect(int id)
+        {
+            return proyects.GetByID(id);
+        }
         [HttpPut]
         [Route("update")]
         public string UpdateProyect(int id, Proyect p)

@@ -18,5 +18,7 @@
             this.created_by = created_by;
             this.created_at = created_at;
         }
+
+        public Proyect (int id) { this.id = id; }
     }
 }
