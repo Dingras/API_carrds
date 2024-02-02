@@ -1,47 +1,47 @@
 ﻿using API_carrds.DataControllers;
 using Microsoft.AspNetCore.Mvc;
-
+using Task = API_carrds.Models.Task;
 
 namespace API_carrds.Controllers
 {
     [ApiController]
-    [Route("task")]
+    [Route("tasks")]
     public class TaskController
     {
-        Tasks task = new Tasks();
+        Tasks tasks = new Tasks();
 
         [HttpPost]
         [Route("add")]
-        public string CreateTask(API_carrds.Models.Task t)
+        public string CreateTask(Task t)
         {
-            return task.Create(t);
+            return tasks.Create(t);
         }
 
         [HttpGet]
-        [Route("List")]
-        public IEnumerable<API_carrds.Models.Task> GetAllTask()
+        [Route("list")]
+        public IEnumerable<Task> GetAllTask()
         {
-            return task.GetAll();
+            return tasks.GetAll();
         }
 
         [HttpGet]
-        [Route("listByID")]
-        public API_carrds.Models.Task GetTask(int id)
+        [Route("task")]
+        public Task GetTask(int id)
         {
-            return task.GetByID(id);
+            return tasks.GetByID(id);
         }
         [HttpPut]
         [Route("update")]
-        public string UpdateTask(int id, API_carrds.Models.Task t)
+        public string UpdateTask(int id, Task t)
         {
-            return task.Update(id, t);
+            return tasks.Update(id, t);
         }
 
         [HttpDelete]
         [Route("delete")]
         public string DeleteTask(int id)
         {
-            return task.Delete(id);
+            return tasks.Delete(id);
         }
     }
 }

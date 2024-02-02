@@ -114,6 +114,7 @@ namespace API_carrds.DataControllers
                                     info_text = reader.GetString(reader.GetOrdinal("info_text")),
                                     proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect"))),
                                     spring = new Spring(reader.GetInt32(reader.GetOrdinal("id_springs"))),
+                                    responsible = new User(reader.GetInt32(reader.GetOrdinal("id_responsible")))
                                 };
 
                                 tasksList.Add(task);
