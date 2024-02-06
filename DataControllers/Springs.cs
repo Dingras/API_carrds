@@ -2,42 +2,30 @@
 using API_carrds.DataControllers.Interfaces;
 using API_carrds.Models;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Asn1;
 using System.Text;
-using Task = API_carrds.Models.Task;
-
 
 namespace API_carrds.DataControllers
 {
-    public class Tasks : Icrud<Task>
+    public class Springs:Icrud<Spring>
     {
-        private const string TABLE = "tasks";
-        public string Create(Task t)
-        {
+        private const string TABLE = "springs";
 
+        public string Create(Spring s)
+        {
             using (Connection cnn = new Connection())
             {
                 string message = "Connection ERROR";
-
                 try
                 {
                     cnn.Open();
-                    string query = "INSERT INTO " + TABLE + "(`title`, `status`, `id_proyect`, `id_responsible`, `created_at`, `finalized_at`, `time_limit`, `info_text`, `id_springs`) VALUES (@title,@status,@id_proyect,@id_responsible,@created_at,@finalized_at,@time_limit,@info_text,@id_springs)";
+                    string query = "INSERT INTO " + TABLE + " (`title`, `description`, `id_proyect`) VALUES (@title,@description,@id_proyect)";
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
-                        cmd.Parameters.Add("@title", MySqlDbType.VarChar).Value = t.title;
-                        cmd.Parameters.Add("@status", MySqlDbType.Int32).Value = t.status;
-                        cmd.Parameters.Add("@id_proyect", MySqlDbType.VarChar).Value = t.proyect;
-                        cmd.Parameters.Add("@id_responsible", MySqlDbType.VarChar).Value = t.responsible;
-                        cmd.Parameters.Add("@created_at", MySqlDbType.DateTime).Value = t.created_at;
-                        cmd.Parameters.Add("@finalized_at", MySqlDbType.DateTime).Value = t.finalized_at;
-                        cmd.Parameters.Add("@time_limit", MySqlDbType.DateTime).Value = t.time_limit;
-                        cmd.Parameters.Add("@info_text", MySqlDbType.VarChar).Value = t.info_text;
-                        cmd.Parameters.Add("@id_springs", MySqlDbType.VarChar).Value = t.spring;
-
+                        cmd.Parameters.Add("@title", MySqlDbType.VarChar).Value = s.title;
+                        cmd.Parameters.Add("@description", MySqlDbType.VarChar).Value = s.description;
+                        cmd.Parameters.Add("@id_proyect", MySqlDbType.Int32).Value = s.proyect.id;
                         cmd.ExecuteNonQuery();
                     }
-
                     cnn.Close();
                     message = "OK";
                 }
@@ -50,9 +38,10 @@ namespace API_carrds.DataControllers
                 {
                     cnn.Close();
                 }
-                return message;
-            }
 
+                return message;
+
+            }
         }
 
         public string Delete(int id)
@@ -80,44 +69,39 @@ namespace API_carrds.DataControllers
                     cnn.Close();
                     message = ex.Message;
                 }
-                finally {
+                finally
+                {
                     cnn.Close();
                 }
                 return message;
             }
         }
 
-        public IEnumerable<Task> GetAll()
+        public IEnumerable<Spring> GetAll()
         {
-            List<Task> tasksList = new List<Task>();
+            List<Spring> springList = new List<Spring>();
             using (Connection cnn = new Connection())
             {
                 try
                 {
                     cnn.Open();
-                    string query = "SELECT `id`, `title`, `status`, `info_text`, `created_at`, `time_limit`, `finalized_at`, `id_proyect`, `id_responsible`, `id_springs` FROM " + TABLE;
-                   
-                    using (MySqlCommand cmd = new MySqlCommand(query,cnn.Connect()))
-                    { 
-                        using(MySqlDataReader reader =  cmd.ExecuteReader()) 
+                    string query = "SELECT `id`, `title`, `description`, `id_proyect` FROM " + TABLE;
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                Task task = new Task()
+                                Spring spring = new Spring()
                                 {
                                     id = reader.GetInt32(reader.GetOrdinal("id")),
                                     title = reader.GetString(reader.GetOrdinal("title")),
-                                    status = reader.GetInt32(reader.GetOrdinal("status")),
-                                    created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
-                                    finalized_at = reader.GetDateTime(reader.GetOrdinal("finalized_at")),
-                                    time_limit = reader.GetDateTime(reader.GetOrdinal("time_limit")),
-                                    info_text = reader.GetString(reader.GetOrdinal("info_text")),
-                                    proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect"))),
-                                    spring = new Spring(reader.GetInt32(reader.GetOrdinal("id_springs"))),
-                                    responsible = new User(reader.GetInt32(reader.GetOrdinal("id_responsible")))
+                                    description = reader.GetString(reader.GetOrdinal("description")),
+                                    proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect")))
                                 };
 
-                                tasksList.Add(task);
+                                springList.Add(spring);
                             }
                         }
                     }
@@ -127,24 +111,24 @@ namespace API_carrds.DataControllers
                     cnn.Close();
                     Console.WriteLine(ex.Message);
                 }
-                finally 
+                finally
                 {
                     cnn.Close();
                 }
-                return tasksList;
+                return springList;
             }
         }
 
-        public Task GetByID(int id)
+        public Spring GetByID(int id)
         {
             using (Connection cnn = new Connection())
             {
 
                 cnn.Open();
                 string query = "SELECT * FROM " + TABLE + " WHERE `id`=@id";
-                
-                Task task = null;
-                
+
+                Spring spring = null;
+
                 using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                 {
                     cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -152,32 +136,22 @@ namespace API_carrds.DataControllers
                     {
                         if (reader.Read())
                         {
-                            task = new Task
+                            spring = new Spring
                             {
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
                                 title = reader.GetString(reader.GetOrdinal("title")),
-                                status = reader.GetInt32(reader.GetOrdinal("status")),
-                                created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
-                                finalized_at = reader.GetDateTime(reader.GetOrdinal("finalized_at")),
-                                time_limit = reader.GetDateTime(reader.GetOrdinal("time_limit")),
-                                info_text= reader.GetString(reader.GetOrdinal("info_text")),
-                                proyect = new Proyect (reader.GetInt32(reader.GetOrdinal("id_proyect"))),
-                                spring = new Spring(reader.GetInt32(reader.GetOrdinal("id_springs"))),
-                                responsible = new User(reader.GetInt32(reader.GetOrdinal("id_responsible")))
-
+                                description = reader.GetString(reader.GetOrdinal("description")),
+                                proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect")))
                             };
                         }
                     }
                 }
-                
-                return task;
+                return spring;
             }
-
         }
-    
-        public string Update(int id, Task t)
+
+        public string Update(int id, Spring s)
         {
-           
             using (Connection cnn = new Connection())
             {
                 string message = "Connecction ERROR";
@@ -185,24 +159,19 @@ namespace API_carrds.DataControllers
                 try
                 {
                     cnn.Open();
-                   
+
                     StringBuilder query = new StringBuilder("UPDATE " + TABLE + " SET ");
                     List<MySqlParameter> parameters = new List<MySqlParameter>();
 
-                    if (!string.IsNullOrEmpty(t.title))
+                    if (!string.IsNullOrEmpty(s.title))
                     {
                         query.Append("`title` = @title, ");
-                        parameters.Add(new MySqlParameter("@title", MySqlDbType.VarChar) { Value = t.title });
+                        parameters.Add(new MySqlParameter("@title", MySqlDbType.VarChar) { Value = s.title });
                     }
-                    if (!string.IsNullOrEmpty(t.info_text))
+                    if (!string.IsNullOrEmpty(s.description))
                     {
-                        query.Append("`info_text` = @info_text, ");
-                        parameters.Add(new MySqlParameter("@info_text", MySqlDbType.VarChar) { Value = t.info_text });
-                    }
-                    if (t.status >= 0)
-                    {
-                        query.Append("`status` = @status, ");
-                        parameters.Add(new MySqlParameter("@status", MySqlDbType.VarChar) { Value = t.status });
+                        query.Append("`description` = @description, ");
+                        parameters.Add(new MySqlParameter("@description", MySqlDbType.VarChar) { Value = s.description });
                     }
                     query.Remove(query.Length - 2, 2);
 
@@ -233,4 +202,3 @@ namespace API_carrds.DataControllers
         }
     }
 }
-
