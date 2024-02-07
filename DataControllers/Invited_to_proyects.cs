@@ -26,8 +26,8 @@ namespace API_carrds.DataControllers
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
                         cmd.Parameters.Add("@status", MySqlDbType.Int32).Value = itp.status;
-                        cmd.Parameters.Add("@id_proyect", MySqlDbType.VarChar).Value = itp.proyect;
-                        cmd.Parameters.Add("@id_user", MySqlDbType.VarChar).Value = itp.user;
+                        cmd.Parameters.Add("@id_proyect", MySqlDbType.Int32).Value = itp.proyect.id;
+                        cmd.Parameters.Add("@id_user", MySqlDbType.Int32).Value = itp.user.id;
                         
 
                         cmd.ExecuteNonQuery();

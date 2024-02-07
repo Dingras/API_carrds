@@ -23,8 +23,8 @@ namespace API_carrds.DataControllers
                     {
                         cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = p.name;
                         cmd.Parameters.Add("@description", MySqlDbType.VarChar).Value = p.description;
-                        cmd.Parameters.Add("@created_by", MySqlDbType.VarChar).Value = p.created_by;
-                        cmd.Parameters.Add("@created_at", MySqlDbType.VarChar).Value = p.created_at;
+                        cmd.Parameters.Add("@created_by", MySqlDbType.Int32).Value = p.created_by.id;
+                        cmd.Parameters.Add("@created_at", MySqlDbType.DateTime).Value = p.created_at;
                         cmd.ExecuteNonQuery();
                     }
                     cnn.Close();
