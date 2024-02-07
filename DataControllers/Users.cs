@@ -211,5 +211,36 @@ namespace API_carrds.DataControllers
             }
         }
 
+        public User? AuthUser(User u)
+        {
+            using (Connection cnn = new Connection())
+            {
+                cnn.Open();
+                string query = "SELECT * FROM " + TABLE + " WHERE `username` = @username AND `password` = @password";
+                User user = null;
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                {
+                    cmd.Parameters.Add("@username", MySqlDbType.VarChar).Value = u.username;
+                    cmd.Parameters.Add("@password", MySqlDbType.VarChar).Value = u.password;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new User
+                            {
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
+                                username = reader.GetString(reader.GetOrdinal("username")),
+                                password = reader.GetString(reader.GetOrdinal("password")),
+                                name = reader.GetString(reader.GetOrdinal("name")),
+                                last_name = reader.GetString(reader.GetOrdinal("last_name")),
+                                email = reader.GetString(reader.GetOrdinal("email"))
+                            };
+                        }
+                    }
+                }
+                return user;
+            }
+        }
+
     }
 }
