@@ -27,13 +27,13 @@ namespace API_carrds.DataControllers
                     {
                         cmd.Parameters.Add("@title", MySqlDbType.VarChar).Value = t.title;
                         cmd.Parameters.Add("@status", MySqlDbType.Int32).Value = t.status;
-                        cmd.Parameters.Add("@id_proyect", MySqlDbType.VarChar).Value = t.proyect;
-                        cmd.Parameters.Add("@id_responsible", MySqlDbType.VarChar).Value = t.responsible;
+                        cmd.Parameters.Add("@id_proyect", MySqlDbType.Int32).Value = t.proyect.id;
+                        cmd.Parameters.Add("@id_responsible", MySqlDbType.Int32).Value = t.responsible.id;
                         cmd.Parameters.Add("@created_at", MySqlDbType.DateTime).Value = t.created_at;
                         cmd.Parameters.Add("@finalized_at", MySqlDbType.DateTime).Value = t.finalized_at;
                         cmd.Parameters.Add("@time_limit", MySqlDbType.DateTime).Value = t.time_limit;
                         cmd.Parameters.Add("@info_text", MySqlDbType.VarChar).Value = t.info_text;
-                        cmd.Parameters.Add("@id_springs", MySqlDbType.VarChar).Value = t.spring;
+                        cmd.Parameters.Add("@id_springs", MySqlDbType.Int32).Value = t.spring.id;
 
                         cmd.ExecuteNonQuery();
                     }
@@ -230,7 +230,7 @@ namespace API_carrds.DataControllers
 
                 return message;
             }
-            }
         }
     }
+}
 

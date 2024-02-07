@@ -6,46 +6,11 @@ using System.Text;
 
 namespace API_carrds.DataControllers
 {
-    public class Proyects : Icrud<Proyect>
+    public class Springs:Icrud<Spring>
     {
-        private const string TABLE = "proyects";
-        public string Create(Proyect p)
-        {
-            using (Connection cnn = new Connection())
-            {
-                string message = "Conection ERROR";
+        private const string TABLE = "springs";
 
-                try
-                {
-                    cnn.Open();
-                    string query = "INSERT INTO " + TABLE + "(`name`, `description`,`created_by`,`created_at`) VALUES (@name,@description,@created_by,@created_at)";
-                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
-                    {
-                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = p.name;
-                        cmd.Parameters.Add("@description", MySqlDbType.VarChar).Value = p.description;
-                        cmd.Parameters.Add("@created_by", MySqlDbType.Int32).Value = p.created_by.id;
-                        cmd.Parameters.Add("@created_at", MySqlDbType.DateTime).Value = p.created_at;
-                        cmd.ExecuteNonQuery();
-                    }
-                    cnn.Close();
-                    message = "OK";
-                }
-                catch (Exception ex)
-                {
-                    cnn.Close();
-                    message = ex.Message;
-                }
-                finally
-                {
-                    cnn.Close();
-                }
-
-                return message;
-            }
-            
-        }
-
-        public string Delete(int id)
+        public string Create(Spring s)
         {
             using (Connection cnn = new Connection())
             {
@@ -53,15 +18,16 @@ namespace API_carrds.DataControllers
                 try
                 {
                     cnn.Open();
-                    string query = "DELETE FROM proyects WHERE id=@id";
+                    string query = "INSERT INTO " + TABLE + " (`title`, `description`, `id_proyect`) VALUES (@title,@description,@id_proyect)";
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
-                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        cmd.Parameters.Add("@title", MySqlDbType.VarChar).Value = s.title;
+                        cmd.Parameters.Add("@description", MySqlDbType.VarChar).Value = s.description;
+                        cmd.Parameters.Add("@id_proyect", MySqlDbType.Int32).Value = s.proyect.id;
                         cmd.ExecuteNonQuery();
                     }
                     cnn.Close();
                     message = "OK";
-
                 }
                 catch (Exception ex)
                 {
@@ -74,51 +40,52 @@ namespace API_carrds.DataControllers
                 }
 
                 return message;
-            }
 
-        }
-
-        public Proyect GetByID(int id)
-        {
-            using (Connection cnn = new Connection())
-            {
-                cnn.Open();
-                string query = "SELECT * FROM " + TABLE + " WHERE `id`=@id";
-                Proyect proyect = null;
-                using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
-                {
-                    cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            proyect = new Proyect
-                            {
-                                id = reader.GetInt32(reader.GetOrdinal("id")),
-                                name = reader.GetString(reader.GetOrdinal("name")),
-                                description = reader.GetString(reader.GetOrdinal("description")),
-                                created_by =new User (reader.GetInt32(reader.GetOrdinal("created_by"))),
-                                created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
-               
-                            };
-                        }
-                    }
-                }
-                return proyect;
             }
         }
 
-        public IEnumerable<Proyect> GetAll()
+        public string Delete(int id)
         {
+            string message = "Conecction ERROR";
 
-            List<Proyect> proyects = new List<Proyect>();
-           
             using (Connection cnn = new Connection())
             {
                 try
                 {
                     cnn.Open();
-                    string query = "SELECT `id`,`name`,`description`,`created_by`,`created_at` FROM " + TABLE;
+                    string query = "DELETE FROM " + TABLE + " WHERE id=@id";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    cnn.Close();
+                    message = "OK";
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+                return message;
+            }
+        }
+
+        public IEnumerable<Spring> GetAll()
+        {
+            List<Spring> springList = new List<Spring>();
+            using (Connection cnn = new Connection())
+            {
+                try
+                {
+                    cnn.Open();
+                    string query = "SELECT `id`, `title`, `description`, `id_proyect` FROM " + TABLE;
 
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
@@ -126,54 +93,89 @@ namespace API_carrds.DataControllers
                         {
                             while (reader.Read())
                             {
-                                Proyect proyect = new Proyect
+                                Spring spring = new Spring()
                                 {
                                     id = reader.GetInt32(reader.GetOrdinal("id")),
-                                    name = reader.GetString(reader.GetOrdinal("name")),
+                                    title = reader.GetString(reader.GetOrdinal("title")),
                                     description = reader.GetString(reader.GetOrdinal("description")),
-                                    created_by = new User(reader.GetInt32(reader.GetOrdinal("created_by"))),
-                                    created_at = reader.GetDateTime(reader.GetOrdinal("created_at"))
+                                    proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect")))
                                 };
 
-                                proyects.Add(proyect);
+                                springList.Add(spring);
                             }
                         }
                     }
-                }catch (Exception ex) 
+                }
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Error de MySQL: {ex.Message}");
+                    cnn.Close();
                     Console.WriteLine(ex.Message);
                 }
+                finally
+                {
+                    cnn.Close();
+                }
+                return springList;
             }
-           
-            return proyects;
         }
 
-        public string Update(int id, Proyect p)
+        public Spring GetByID(int id)
         {
             using (Connection cnn = new Connection())
             {
-                string message = "Connection ERROR";
+
+                cnn.Open();
+                string query = "SELECT * FROM " + TABLE + " WHERE `id`=@id";
+
+                Spring spring = null;
+
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                {
+                    cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            spring = new Spring
+                            {
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
+                                title = reader.GetString(reader.GetOrdinal("title")),
+                                description = reader.GetString(reader.GetOrdinal("description")),
+                                proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect")))
+                            };
+                        }
+                    }
+                }
+                return spring;
+            }
+        }
+
+        public string Update(int id, Spring s)
+        {
+            using (Connection cnn = new Connection())
+            {
+                string message = "Connecction ERROR";
+
                 try
                 {
                     cnn.Open();
+
                     StringBuilder query = new StringBuilder("UPDATE " + TABLE + " SET ");
                     List<MySqlParameter> parameters = new List<MySqlParameter>();
 
-                    if (!string.IsNullOrEmpty(p.name))
+                    if (!string.IsNullOrEmpty(s.title))
                     {
-                        query.Append("`name` = @name, ");
-                        parameters.Add(new MySqlParameter("@name", MySqlDbType.VarChar) { Value = p.name });
+                        query.Append("`title` = @title, ");
+                        parameters.Add(new MySqlParameter("@title", MySqlDbType.VarChar) { Value = s.title });
                     }
-                    if (!string.IsNullOrEmpty(p.description))
+                    if (!string.IsNullOrEmpty(s.description))
                     {
                         query.Append("`description` = @description, ");
-                        parameters.Add(new MySqlParameter("@description", MySqlDbType.VarChar) { Value = p.description });
+                        parameters.Add(new MySqlParameter("@description", MySqlDbType.VarChar) { Value = s.description });
                     }
+                    query.Remove(query.Length - 2, 2);
 
-                    query.Remove(query.Length - 2, 2); // Borra el espacio y la coma del final de la consulta
-
-                    query.Append(" WHERE `id` = @id"); // Agrego la condicion al final de la consulta
+                    query.Append(" WHERE `id` = @id");
                     parameters.Add(new MySqlParameter("@id", MySqlDbType.Int32) { Value = id });
 
                     using (MySqlCommand cmd = new MySqlCommand(query.ToString(), cnn.Connect()))
@@ -194,7 +196,7 @@ namespace API_carrds.DataControllers
                 {
                     cnn.Close();
                 }
-                
+
                 return message;
             }
         }
