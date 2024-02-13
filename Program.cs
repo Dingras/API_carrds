@@ -20,6 +20,13 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost:5173") // cambiar el puerto en caso de ser necesario, debe ser el mismo que el de la app React
+           .AllowAnyHeader()
+           .AllowAnyMethod();
+});
+
 app.MapControllers();
 
 app.Run();
