@@ -24,7 +24,7 @@ namespace API_carrds.Controllers
             return proyects.GetAll();
         }
         [HttpGet]
-        [Route("listProyect")]
+        [Route("proyect")]
         public Proyect GetProyect(int id)
         {
             return proyects.GetByID(id);
