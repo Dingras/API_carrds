@@ -12,7 +12,6 @@ namespace API_carrds.DataControllers
     {
         private const string  TABLE = "invited_to_proyect ";
        
-
         public string Create(InvitedToProyect itp)
         {
             using (Connection cnn = new Connection())

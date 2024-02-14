@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace API_carrds.Controllers
 {
     [ApiController]
-    [Route("InvitedToProyect")]
+    [Route("invitedToProyect")]
     public class InvitedToProyectController
     {
         Invited_to_proyects itp = new Invited_to_proyects();
@@ -27,7 +27,7 @@ namespace API_carrds.Controllers
         }
 
         [HttpGet]
-        [Route("listInvitedToProyect")]
+        [Route("invited")]
         public InvitedToProyect GetInvitedToProyect(int id)
         {
             return itp.GetByID(id);
@@ -41,7 +41,7 @@ namespace API_carrds.Controllers
         }
 
         [HttpDelete]
-        [Route("Delete")]
+        [Route("delete")]
         public string DeleteInvitedToProyect(int id)
         {
             return itp.Delete(id);

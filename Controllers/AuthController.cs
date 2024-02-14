@@ -12,9 +12,14 @@ namespace API_carrds.Controllers
 
         [HttpPost]
         [Route("login")]
-        public User? LogIn(User u)
+        public IActionResult LogIn(User u)
         {
-            return users.AuthUser(u);
+            User? user = users.AuthUser(u);
+            if (user == null)
+            {
+                return Ok(new Error("Usuario o Contraseña incorrectos."));
+            }
+            return Ok(user);
         }
 
     }
