@@ -78,6 +78,46 @@ namespace API_carrds.DataControllers
 
         }
 
+        public IEnumerable<Proyect> GetProyectsByUserID(int id)
+        {
+            using (Connection cnn = new Connection())
+            {
+                List<Proyect> proyects = new List<Proyect>();
+                try
+                {
+                    cnn.Open();
+                    string query = "SELECT * FROM " + TABLE + " WHERE `created_by`=@id";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Proyect proyect = new Proyect
+                                {
+                                    id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    name = reader.GetString(reader.GetOrdinal("name")),
+                                    description = reader.GetString(reader.GetOrdinal("description")),
+                                    created_by = new User(reader.GetInt32(reader.GetOrdinal("created_by"))),
+                                    created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
+
+                                };
+                                proyects.Add(proyect);
+                            }
+                        }
+                    }
+                    
+
+                }catch(Exception ex)
+                {
+                    Console.WriteLine($"Error de MySQL: {ex.Message}");
+                    Console.WriteLine(ex.Message);
+                }
+                return proyects;
+            }
+        }
+
         public Proyect GetByID(int id)
         {
             using (Connection cnn = new Connection())
