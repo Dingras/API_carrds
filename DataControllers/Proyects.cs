@@ -21,7 +21,7 @@ namespace API_carrds.DataControllers
                     string query = "INSERT INTO " + TABLE + "(`name`, `description`,`created_by`,`created_at`) VALUES (@name,@description,@created_by,@created_at)";
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
-                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = p.name;
+                        cmd.Parameters.Add("@name", MySqlDbType.VarChar).Value = p.title;
                         cmd.Parameters.Add("@description", MySqlDbType.VarChar).Value = p.description;
                         cmd.Parameters.Add("@created_by", MySqlDbType.Int32).Value = p.created_by.id;
                         cmd.Parameters.Add("@created_at", MySqlDbType.DateTime).Value = p.created_at;
@@ -97,7 +97,7 @@ namespace API_carrds.DataControllers
                                 Proyect proyect = new Proyect
                                 {
                                     id = reader.GetInt32(reader.GetOrdinal("id")),
-                                    name = reader.GetString(reader.GetOrdinal("name")),
+                                    title = reader.GetString(reader.GetOrdinal("name")),
                                     description = reader.GetString(reader.GetOrdinal("description")),
                                     created_by = new User(reader.GetInt32(reader.GetOrdinal("created_by"))),
                                     created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
@@ -135,7 +135,7 @@ namespace API_carrds.DataControllers
                             proyect = new Proyect
                             {
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
-                                name = reader.GetString(reader.GetOrdinal("name")),
+                                title = reader.GetString(reader.GetOrdinal("name")),
                                 description = reader.GetString(reader.GetOrdinal("description")),
                                 created_by =new User (reader.GetInt32(reader.GetOrdinal("created_by"))),
                                 created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
@@ -169,7 +169,7 @@ namespace API_carrds.DataControllers
                                 Proyect proyect = new Proyect
                                 {
                                     id = reader.GetInt32(reader.GetOrdinal("id")),
-                                    name = reader.GetString(reader.GetOrdinal("name")),
+                                    title = reader.GetString(reader.GetOrdinal("name")),
                                     description = reader.GetString(reader.GetOrdinal("description")),
                                     created_by = new User(reader.GetInt32(reader.GetOrdinal("created_by"))),
                                     created_at = reader.GetDateTime(reader.GetOrdinal("created_at"))
@@ -200,10 +200,10 @@ namespace API_carrds.DataControllers
                     StringBuilder query = new StringBuilder("UPDATE " + TABLE + " SET ");
                     List<MySqlParameter> parameters = new List<MySqlParameter>();
 
-                    if (!string.IsNullOrEmpty(p.name))
+                    if (!string.IsNullOrEmpty(p.title))
                     {
                         query.Append("`name` = @name, ");
-                        parameters.Add(new MySqlParameter("@name", MySqlDbType.VarChar) { Value = p.name });
+                        parameters.Add(new MySqlParameter("@name", MySqlDbType.VarChar) { Value = p.title });
                     }
                     if (!string.IsNullOrEmpty(p.description))
                     {
