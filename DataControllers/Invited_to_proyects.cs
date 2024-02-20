@@ -103,7 +103,7 @@ namespace API_carrds.DataControllers
                                 InvitedToProyect itp = new InvitedToProyect()
                                 {
                                     id = reader.GetInt32(reader.GetOrdinal("id")),
-                                    proyect = new Proyect( reader.GetInt32(reader.GetOrdinal("id_proyect"))),
+                                    proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect"))),
                                     user = new User(reader.GetInt32(reader.GetOrdinal("id_user"))),
                                     status = reader.GetInt32(reader.GetOrdinal("status")),   
                                 };
@@ -204,6 +204,47 @@ namespace API_carrds.DataControllers
             }
         }
 
+        public IEnumerable<Proyect> GetProyectsAsInviteByUserID(int id)
+        {
+            using (Connection cnn = new Connection())
+            {
+                List<Proyect> proyects = new List<Proyect>();
+                string message = "Connecction ERROR";
+                try
+                {
+                    cnn.Open();
+                    string query = @"SELECT `proyects`.`id`, `proyects`.`name`, `proyects`.`description`, `proyects`.`created_by`, `proyects`.`created_at` FROM `invited_to_proyect`
+                                    INNER JOIN `proyects` ON `invited_to_proyect`.`id_proyect` = `proyects`.`id`
+                                    WHERE `id_user` = @id;";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Proyect proyect = new Proyect
+                                {
+                                    id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    title = reader.GetString(reader.GetOrdinal("name")),
+                                    description = reader.GetString(reader.GetOrdinal("description")),
+                                    created_by = new User(reader.GetInt32(reader.GetOrdinal("created_by"))),
+                                    created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
+
+                                };
+                                proyects.Add(proyect);
+                            }
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                return proyects;
+            }
+        }
        
         
     }

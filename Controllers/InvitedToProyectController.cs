@@ -33,6 +33,13 @@ namespace API_carrds.Controllers
             return itp.GetByID(id);
         }
 
+        [HttpGet]
+        [Route("user")]
+        public IEnumerable<Proyect> GetProyectsAsInvite(int id)
+        {
+            return itp.GetProyectsAsInviteByUserID(id);
+        }
+
         [HttpPut]
         [Route("update")]
         public string UpdateInvitedToProyect(int id, InvitedToProyect i)
