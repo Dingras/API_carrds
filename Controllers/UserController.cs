@@ -24,6 +24,13 @@ namespace API_carrds.Controllers
             return users.GetByID(id);  
         }
 
+        [HttpGet]
+        [Route("search/username")]
+        public User SearchByUsername(string username)
+        {
+            return users.GetByUsername(username);
+        }
+
         [HttpPost]
         [Route("add")]
         public string CreateUser(User u)

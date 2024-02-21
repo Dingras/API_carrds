@@ -135,6 +135,56 @@ namespace API_carrds.DataControllers
             }
         }
 
+        public IEnumerable<Task> GetBySpring(int id_spring)
+        {
+            List<Task> tasksList = new List<Task>();
+            using (Connection cnn = new Connection())
+            {
+                try
+                {
+                    cnn.Open();
+                    string query = @"SELECT `id`, `title`, `status`, `info_text`, `created_at`, `time_limit`, `finalized_at`, `id_proyect`, `id_responsible`, `id_springs` FROM " + TABLE +
+                                    " WHERE `id_springs` = @id_springs";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id_spring", MySqlDbType.Int32).Value = id_spring;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Task task = new Task()
+                                {
+                                    id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    title = reader.GetString(reader.GetOrdinal("title")),
+                                    status = reader.GetInt32(reader.GetOrdinal("status")),
+                                    created_at = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                                    finalized_at = reader.GetDateTime(reader.GetOrdinal("finalized_at")),
+                                    time_limit = reader.GetDateTime(reader.GetOrdinal("time_limit")),
+                                    info_text = reader.GetString(reader.GetOrdinal("info_text")),
+                                    proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect"))),
+                                    spring = new Spring(reader.GetInt32(reader.GetOrdinal("id_springs"))),
+                                    responsible = new User(reader.GetInt32(reader.GetOrdinal("id_responsible")))
+                                };
+
+                                tasksList.Add(task);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+                return tasksList;
+            }
+        }
+
         public Task GetByID(int id)
         {
             using (Connection cnn = new Connection())

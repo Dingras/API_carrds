@@ -18,6 +18,13 @@ namespace API_carrds.Controllers
         }
 
         [HttpGet]
+        [Route("proyect")]
+        public IEnumerable<Spring> ListSpringsByProyect(int id_proyect)
+        {
+            return springs.GetByProyect(id_proyect);
+        }
+
+        [HttpGet]
         [Route("spring")]
         public Spring GetSpring(int id)
         {

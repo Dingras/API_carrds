@@ -119,6 +119,49 @@ namespace API_carrds.DataControllers
             }
         }
 
+        public IEnumerable<Spring> GetByProyect(int id_proyect)
+        {
+            List<Spring> springList = new List<Spring>();
+            using (Connection cnn = new Connection())
+            {
+                try
+                {
+                    cnn.Open();
+                    string query = "SELECT `id`, `title`, `description`, `id_proyect` FROM " + TABLE + " WHERE `id_proyect` = @id_proyect";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id_proyect", MySqlDbType.Int32).Value = id_proyect;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Spring spring = new Spring()
+                                {
+                                    id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    title = reader.GetString(reader.GetOrdinal("title")),
+                                    description = reader.GetString(reader.GetOrdinal("description")),
+                                    proyect = new Proyect(reader.GetInt32(reader.GetOrdinal("id_proyect")))
+                                };
+
+                                springList.Add(spring);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+                return springList;
+            }
+        }
+
         public Spring GetByID(int id)
         {
             using (Connection cnn = new Connection())

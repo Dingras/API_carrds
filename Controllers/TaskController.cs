@@ -25,6 +25,13 @@ namespace API_carrds.Controllers
         }
 
         [HttpGet]
+        [Route("spring")]
+        public IEnumerable<Task> GetBySpring(int id_spring)
+        {
+            return tasks.GetBySpring(id_spring);
+        }
+
+        [HttpGet]
         [Route("task")]
         public Task GetTask(int id)
         {
