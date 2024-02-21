@@ -98,10 +98,11 @@ namespace API_carrds.DataControllers
                             {
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
                                 username = reader.GetString(reader.GetOrdinal("username")),
-                                password = reader.GetString(reader.GetOrdinal("password")),
+                                password = "##########",//reader.GetString(reader.GetOrdinal("password")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 last_name = reader.GetString(reader.GetOrdinal("last_name")),
-                                email = reader.GetString(reader.GetOrdinal("email"))
+                                email = reader.GetString(reader.GetOrdinal("email")),
+                                avatar_url = reader.GetString(reader.GetOrdinal("avatar_url"))
                             };
                         }
                     }
@@ -117,7 +118,7 @@ namespace API_carrds.DataControllers
             using (Connection cnn = new Connection())
             {
                 cnn.Open();
-                string query = "SELECT `id`, `username`, `password`, `name`, `last_name`, `email` FROM " + TABLE;
+                string query = "SELECT `id`, `username`, `password`, `name`, `last_name`, `email`, `avatar_url` FROM " + TABLE;
 
                 using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                 {
@@ -129,10 +130,11 @@ namespace API_carrds.DataControllers
                             {
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
                                 username = reader.GetString(reader.GetOrdinal("username")),
-                                password = reader.GetString(reader.GetOrdinal("password")),
+                                password = "##########",//reader.GetString(reader.GetOrdinal("password")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 last_name = reader.GetString(reader.GetOrdinal("last_name")),
-                                email = reader.GetString(reader.GetOrdinal("email"))
+                                email = reader.GetString(reader.GetOrdinal("email")),
+                                avatar_url = reader.GetString(reader.GetOrdinal("avatar_url"))
                             };
                             users.Add(user);
                         }
@@ -230,10 +232,11 @@ namespace API_carrds.DataControllers
                             {
                                 id = reader.GetInt32(reader.GetOrdinal("id")),
                                 username = reader.GetString(reader.GetOrdinal("username")),
-                                password = reader.GetString(reader.GetOrdinal("password")),
+                                password = "##########",//reader.GetString(reader.GetOrdinal("password")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 last_name = reader.GetString(reader.GetOrdinal("last_name")),
-                                email = reader.GetString(reader.GetOrdinal("email"))
+                                email = reader.GetString(reader.GetOrdinal("email")),
+                                avatar_url = reader.GetString(reader.GetOrdinal("avatar_url"))
                             };
                         }
                     }
