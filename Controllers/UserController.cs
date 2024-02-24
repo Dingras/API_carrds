@@ -26,9 +26,18 @@ namespace API_carrds.Controllers
 
         [HttpGet]
         [Route("search/username")]
-        public User SearchByUsername(string username)
+        public IActionResult SearchByUsername(string username)
         {
-            return users.GetByUsername(username);
+            User user = users.GetByUsername(username);
+            if (user == null)
+            {
+                return Ok(new Error("No se encontro un usuario con ese username"));
+            }
+            else
+            {
+                return Ok(user);
+            }
+            
         }
 
         [HttpPost]

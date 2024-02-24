@@ -148,7 +148,7 @@ namespace API_carrds.DataControllers
 
                     using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
                     {
-                        cmd.Parameters.Add("@id_spring", MySqlDbType.Int32).Value = id_spring;
+                        cmd.Parameters.Add("@id_springs", MySqlDbType.Int32).Value = id_spring;
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
