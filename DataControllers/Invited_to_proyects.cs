@@ -245,6 +245,51 @@ namespace API_carrds.DataControllers
                 return proyects;
             }
         }
+
+        public IEnumerable<InvitedToProyect> GetUsersInvitedByProyect(int id_proyect)
+        {
+            using (Connection cnn = new Connection())
+            {
+                List<InvitedToProyect> users = new List<InvitedToProyect>();
+                string message = "Connecction ERROR";
+                try
+                {
+                    cnn.Open();
+                    string query = @"SELECT `invited_to_proyect`.`id`, `invited_to_proyect`.`status`, `users`.`id` as `user_id`, `users`.`name`, `users`.`last_name`, `users`.`username`, `users`.`email` FROM `invited_to_proyect`
+                                    INNER JOIN `users` ON `invited_to_proyect`.`id_user` = `users`.`id`
+                                    WHERE `id_proyect` = @id_proyect;";
+                    using (MySqlCommand cmd = new MySqlCommand(query, cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id_proyect", MySqlDbType.Int32).Value = id_proyect;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                InvitedToProyect user = new InvitedToProyect
+                                {
+                                    id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    status = reader.GetInt32(reader.GetOrdinal("status")),
+                                    user = new User{
+                                        id = reader.GetInt32(reader.GetOrdinal("user_id")),
+                                        name = reader.GetString(reader.GetOrdinal("name")),
+                                        last_name = reader.GetString(reader.GetOrdinal("last_name")),
+                                        username = reader.GetString(reader.GetOrdinal("username")),
+                                        email = reader.GetString(reader.GetOrdinal("email"))
+                                    }
+                                };
+                                users.Add(user);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                return users;
+            }
+        }
        
         
     }
