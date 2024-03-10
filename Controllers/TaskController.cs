@@ -37,11 +37,19 @@ namespace API_carrds.Controllers
         {
             return tasks.GetByID(id);
         }
+
         [HttpPut]
         [Route("update")]
         public string UpdateTask(int id, Task t)
         {
             return tasks.Update(id, t);
+        }
+
+        [HttpPatch]
+        [Route("update/spring")]
+        public string UpdateSpringToTask(int id, int id_spring)
+        {
+            return tasks.UpdateSpringToTask(id, id_spring);
         }
 
         [HttpDelete]

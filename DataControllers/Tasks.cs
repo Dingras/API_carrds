@@ -281,6 +281,39 @@ namespace API_carrds.DataControllers
                 return message;
             }
         }
+        public string UpdateSpringToTask(int id, int id_spring)
+        {
+            using (Connection cnn = new Connection())
+            {
+                string message = "Connecction ERROR";
+
+                try
+                {
+                    cnn.Open();
+                    string query = @"UPDATE `tasks` SET `id_springs` = @id_spring WHERE `id` = @id";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query.ToString(), cnn.Connect()))
+                    {
+                        cmd.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                        cmd.Parameters.Add("@id_spring", MySqlDbType.Int32).Value = id_spring;
+                        cmd.ExecuteNonQuery();
+                    }
+                    cnn.Close();
+                    message = "OK";
+                }
+                catch (Exception ex)
+                {
+                    cnn.Close();
+                    message = ex.Message;
+                }
+                finally
+                {
+                    cnn.Close();
+                }
+
+                return message;
+            }
+        }
     }
 }
 
